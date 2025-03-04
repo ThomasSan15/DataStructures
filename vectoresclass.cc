@@ -16,6 +16,7 @@ class Vector{
         storage = new T[capacity_];
         size_ = 0;
     }
+
     Vector(unsigned int c, T elem){
         capacity_ = c;
         storage = new T[capacity_];
@@ -24,15 +25,11 @@ class Vector{
         }
         size_ = capacity_;
     }
+
     unsigned int size(){
         return size_;
     }
 
-    T& at(unsigned int position){
-        assert(position >= 0 && position < size_);
-        return storage[position];
-    }
-  
    const T& at(unsigned int position) const{
         assert(position >= 0 && position < size_);
         return storage[position];
@@ -106,6 +103,8 @@ void pop_front(){
     storage = storage2;
 
  }
+
+ 
     void print(){
         for(unsigned int i = 0; i < size_; i++){
             cout << " " << storage[i];
