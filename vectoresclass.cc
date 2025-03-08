@@ -40,6 +40,10 @@ class Vector{
         return size_;
     }
 
+    unsigned int capacity()const{
+        return capacity_;
+    }
+
    const T& at(unsigned int position) const{
         assert(position >= 0 && position < size_);
         return storage[position];
@@ -127,7 +131,7 @@ bool empty(){ return size_ == 0; }
  }*/
 
   void insert(unsigned int index, const T& elem){ //Insert que me agrega un nuevo valor}
-    index--; //si digita que lo quiere cambiar en la primera posición sería la posición 0
+     
     assert(index >= 0 && index < size_);
     if (size_  == capacity_){
         resize();
@@ -139,17 +143,10 @@ bool empty(){ return size_ == 0; }
      size_++;
  }
   void erase(unsigned int index){
-    index--; //si digita que lo quiere cambiar en la primera posición sería la posición 0
-    assert(index >= 0 && index < size_);
-    T* storage2 = new T[capacity_];
-    for(unsigned int i = 0, j = 0; i < size_; i++){
-        if(index != i){
-         storage2[j] = storage[i];
-         j++;
-        }
+     assert(index >= 0 && index < size_);
+    for(unsigned int i = index; i < size_; i++){
+       storage[i] = storage[i + 1];
     }
-    delete[] storage;
-    storage = storage2;
     size_--;
   }
 
@@ -164,8 +161,11 @@ bool empty(){ return size_ == 0; }
 
 template <typename T>
 Vector<T> removeDuplicates(const Vector<T>& vector){
-    Vector<int> result;
-     for(unsigned int i = 0 , l = 0; i < vector.size(); i++){
+    if(!vector.size()){
+        return vector;
+    }
+    Vector<T> result;
+     for(unsigned int i = 0; i < vector.size(); i++){
          bool bandera = true;
          for(unsigned int j = 0; j <  result.size(); j++){
              if(vector[i] == result[j]){
@@ -195,17 +195,22 @@ Vector<T> removeDuplicates(const Vector<T>& vector){
     }
 
  int main(){
-
-    Vector<int> x;
-    x.push_back(25);
-    x.push_front(50);
-    x.push_back(7);
-    x.push_front(588);
-    x.push_back(90);
-    x.push_front(10);
+    Vector<int> numbers = {1, 2, 2, 3, 4, 4, 5};
+    Vector<int> uniqueNumbers = removeDuplicates(numbers);
     
-    x.erase(5);
-    x.insert(5,999);
-    x.print();
+    uniqueNumbers.print(); // Expected: {1, 2, 3, 4, 5}
+    
+    Vector<int> numbers2 = {1,1,1,1,1,1};
+    Vector<int> uniqueNumbers2 = removeDuplicates(numbers2);
+    uniqueNumbers2.print(); // Expected: {1}
+    
+    Vector<int> numbers3 = {};
+    Vector<int> uniqueNumbers3 = removeDuplicates(numbers3);
+    uniqueNumbers3.print(); // Expected: {}
+    
+    Vector<int> numbers4 = {1};
+    Vector<int> uniqueNumbers4 = removeDuplicates(numbers4);
+    uniqueNumbers4.print(); // Expected: {1}
+
     return 0;
  }
