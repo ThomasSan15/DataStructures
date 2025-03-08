@@ -126,7 +126,8 @@ bool empty(){ return size_ == 0; }
     storage[position] = elem;  
  }*/
 
-  void insert(unsigned int index, const T& elem){ //Insert que me agrega un nuevo valor
+  void insert(unsigned int index, const T& elem){ //Insert que me agrega un nuevo valor}
+    index--; //si digita que lo quiere cambiar en la primera posición sería la posición 0
     assert(index >= 0 && index < size_);
     if (size_  == capacity_){
         resize();
@@ -138,11 +139,13 @@ bool empty(){ return size_ == 0; }
      size_++;
  }
   void erase(unsigned int index){
+    index--; //si digita que lo quiere cambiar en la primera posición sería la posición 0
     assert(index >= 0 && index < size_);
     T* storage2 = new T[capacity_];
-    for(unsigned int i = 0; i < size_; i++){
+    for(unsigned int i = 0, j = 0; i < size_; i++){
         if(index != i){
-         storage2[i] = storage[i];
+         storage2[j] = storage[i];
+         j++;
         }
     }
     delete[] storage;
@@ -193,8 +196,16 @@ Vector<T> removeDuplicates(const Vector<T>& vector){
 
  int main(){
 
-    Vector<int> numbers = {1,1, 2, 2, 3, 4, 4,5,3,5,4, 5};
-    Vector<int> uniqueNumbers = removeDuplicates(numbers);
-    uniqueNumbers.print();
+    Vector<int> x;
+    x.push_back(25);
+    x.push_front(50);
+    x.push_back(7);
+    x.push_front(588);
+    x.push_back(90);
+    x.push_front(10);
+    
+    x.erase(5);
+    x.insert(5,999);
+    x.print();
     return 0;
  }
