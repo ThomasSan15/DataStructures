@@ -1,5 +1,8 @@
 #include <iostream>
 #include <cassert>
+#include <fstream>
+#include <random>
+#include <chrono>
 
 using namespace std;
 
@@ -10,15 +13,17 @@ class Vector{
     T* storage;
     unsigned int size_;
     unsigned int capacity_;
+    unsigned int counter_;
     
     public:
     Vector(){
         capacity_ = 5;
         storage = new T[capacity_];
         size_ = 0;
+        counter_ = 0;
     }
 
-    Vector(unsigned int c, T elem){
+    Vector(unsigned int c, T elem = T()){
         capacity_ = c;
         storage = new T[capacity_];
         for(unsigned int i = 0; i < capacity_; i++){
@@ -40,8 +45,12 @@ class Vector{
         return size_;
     }
 
-    unsigned int capacity()const{
+    unsigned int capacity() const{
         return capacity_;
+    }
+
+    unsigned int counter() const{
+        return counter_;
     }
 
    const T& at(unsigned int position) const{
@@ -60,15 +69,20 @@ class Vector{
     private:
     void resize(){
        // cout << "resize" << endl;
-        unsigned int capacity2 = capacity_ * 1.5;
-       T* storage2 = new T[capacity2];
-       for (unsigned int i = 0; i < size_; i++){
+       //capacity_ += 1;     // Aumentamos la nueva capacidad del Vector: politica de Brahian
+       //capacity_ += 2;     // Aumentamos la nueva capacidad del Vector: politica de 
+     capacity_ *= 1.5;   // Aumentamos la nueva capacidad del Vector: politica de Carlos
+         // capacity_ *= 1.7;   // Aumentamos la nueva capacidad del Vector: politica de 
+           //capacity_ *= 2;     // Aumentamos la nueva capacidad del Vector: politica de Martin
+       T* storage2 = new T[capacity_];
+       counter_++;
+              for (unsigned int i = 0; i < size_; i++){
         storage2[i] = storage[i];
 
        }
        delete[] storage;
        storage = storage2;
-       capacity_ = capacity2;
+
     }
     public:
     void push_back(const T& elem){
@@ -102,7 +116,7 @@ void pop_front(){
     assert(size_ > 0);
     T* storage2 = new T[capacity_];
       for(unsigned int i = 0; i < size_ ; i++){
-      storage2[i] = storage[i + 1]; 
+    storage2[i] = storage[i + 1]; 
   }
   delete[] storage;
      storage = storage2;
@@ -130,7 +144,7 @@ bool empty(){ return size_ == 0; }
     storage[position] = elem;  
  }*/
 
-  void insert(unsigned int index, const T& elem){ //Insert que me agrega un nuevo valor}
+  void insert(const T& elem, unsigned int index){ //Insert que me agrega un nuevo valor}
      
     assert(index >= 0 && index < size_);
     if (size_  == capacity_){
@@ -148,6 +162,13 @@ bool empty(){ return size_ == 0; }
        storage[i] = storage[i + 1];
     }
     size_--;
+  }
+
+  void clear(){
+    T* storage2 = new T[capacity_];
+    delete[] storage;
+    storage = storage2;
+
   }
 
     void print(){
@@ -182,34 +203,43 @@ Vector<T> removeDuplicates(const Vector<T>& vector){
     template <typename T>
     class Stack{
     private:
-      unsigned int top;
+     int top;
       Vector<T> storage; 
       public:
-      Stack(const T elem){
+
+      Stack(const T elem = T()){
        top = 0;
        storage.push_back(elem); 
-      }
-
+        }
+      
       void push(const T elem){
         top++;
-        storage.push_back(elem);
-        
+        storage.push_back(elem); 
+      }
+
+      bool empty(){
+        return top == -1;
       }
 
       T pop(){
-        assert(top > 0);
-        
-        return storage[top--]; 
+         assert(empty() == 0);
+        T elem = storage[top];
+        storage.pop_back();
+        top--;
+        return elem; 
       }
       
        T peek(){
+        assert(empty() == 0);
         return storage.at(top);
       }
-   
-      bool empty(){
-        return storage == 0;
-      }
-       
+
+      void print(){
+        cout << endl;
+        for(int i = top; i >= 0; i--)
+            cout << storage[i] << endl;
+        cout << endl;
+    }
     }; 
     
    template <typename T>
@@ -277,54 +307,3 @@ Vector<T> removeDuplicates(const Vector<T>& vector){
 
     return result;
     }
-    
- int main(){
-    /*
-    Vector<int> numbers = {1, 2, 2, 3, 4, 4, 5};
-    Vector<int> uniqueNumbers = removeDuplicates(numbers);
-    
-    uniqueNumbers.print(); // Expected: {1, 2, 3, 4, 5}
-    
-    Vector<int> numbers2 = {1,1,1,1,1,1};
-    Vector<int> uniqueNumbers2 = removeDuplicates(numbers2);
-    uniqueNumbers2.print(); // Expected: {1}
-    
-    Vector<int> numbers3 = {};
-    Vector<int> uniqueNumbers3 = removeDuplicates(numbers3);
-    uniqueNumbers3.print(); // Expected: {}
-    
-    Vector<int> numbers4 = {1};
-    Vector<int> uniqueNumbers4 = removeDuplicates(numbers4);
-    uniqueNumbers4.print(); // Expected: {1}
-  */
- /*
- Vector<int> vector1 = {1, 1, 2, 4, 20, 9, 3, 5};
-Vector<int> vector2 = {2, 4, 6, 10, 2};
-Vector<int> mergedVector = mergeSortedVectors(vector1, vector2);
-
-mergedVector.print(); // Expected: {1, 2, 3, 4, 5, 6}
-
-Vector<int> vector3 = {1, 2, 3};
-Vector<int> vector4 = {};
-Vector<int> mergedVector2 = mergeSortedVectors(vector3, vector4);
-mergedVector2.print(); // Expected: {1, 2, 3}
-
-Vector<int> vector5 = {};
-Vector<int> vector6 = {4,5,6};
-Vector<int> mergedVector3 = mergeSortedVectors(vector5, vector6);
-mergedVector3.print(); // Expected: {4, 5, 6}
-
-Vector<int> vector7 = {1,1,1,1};
-Vector<int> vector8 = {1,1,1,1};
-Vector<int> mergedVector4 = mergeSortedVectors(vector7, vector8);
-mergedVector4.print(); // Expected: {1,1,1,1,1,1,1,1}
-*/
-Stack<int> pila(5);
-cout << pila.peek() << endl;
-pila.push(20);
-cout << pila.peek() << endl;
-cout << pila.pop() << endl;
-cout << pila.peek() << endl;
-
-    return 0;
- }
