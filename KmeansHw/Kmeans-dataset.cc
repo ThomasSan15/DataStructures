@@ -175,7 +175,7 @@ vector<Point> loadData(const string &filename)
 
 int main()
 {
-    vector<Point> data = loadData("kmeans_cleaned.txt");
+    vector<Point> data = loadData("kmeans_data.txt");
     if (data.empty())
     {
         cerr << "No data loaded. Verifica el archivo.\n";
