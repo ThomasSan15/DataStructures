@@ -1,0 +1,38 @@
+#include <iostream>
+#include <stack>
+#include <string>
+
+using namespace std;
+
+bool isOpeningSymbol(char character) {
+    return character == '(' || character == '{' || character == '[';
+}
+
+bool isClosingSymbol(char character) {
+    return character == ')' || character == '}' || character == ']';
+}
+
+bool matches(char opening, char closing) {
+    return (opening == '(' && closing == ')') ||
+           (opening == '{' && closing == '}') ||
+           (opening == '[' && closing == ']');
+}
+
+bool areSymbolsBalanced(const string& input) {
+    stack<char> symbolStack;
+
+    for (char currentChar : input) {
+        if (isOpeningSymbol(currentChar)) {
+            symbolStack.push(currentChar);
+        } 
+        else if (isClosingSymbol(currentChar)) {
+            if (symbolStack.empty() || 
+                !matches(symbolStack.top(), currentChar)) {
+                return false;
+            }
+            symbolStack.pop();
+        }
+    }
+
+    return symbolStack.empty();
+}
